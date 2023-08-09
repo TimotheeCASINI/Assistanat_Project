@@ -1,5 +1,6 @@
 #Librarie permettant de gérer les différentes interaction entre l'application streamlit et les informations sur les descripteurs
 
+import pandas as pd
 
 def présentation(descripteur):
     """
@@ -12,3 +13,12 @@ def présentation(descripteur):
         return "Descripteur permettant de déterminer a quel point un produit est filant"
     else:
         return "Rien a affiche pour ce descripteur"
+
+def recupModele(descripteur,valeur):
+    """
+    But : Renvoie le modèle qui va être utilisé pour calculer la valeur voulu
+    paramètre : le nom du descripteur voulu et la valeur de descripteur recherchee
+    """
+    df = pd.read_csv("Modele/modele.csv")
+    df = df[(df.Descripteur == descripteur) & (df.Min <= valeur) & (df.Max >= valeur)]
+    print(df)
