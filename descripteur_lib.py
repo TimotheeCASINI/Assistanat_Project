@@ -19,6 +19,10 @@ def recupModele(descripteur,valeur):
     But : Renvoie le modèle qui va être utilisé pour calculer la valeur voulu
     paramètre : le nom du descripteur voulu et la valeur de descripteur recherchee
     """
+    #Réduction du dataframe avec seulement la bonne valeur et le descripteur
     df = pd.read_csv("Modele/modele.csv")
     df = df[(df.Descripteur == descripteur) & (df.Min <= valeur) & (df.Max >= valeur)]
-    print(df)
+    #Recuperation du modèle un peu plus logique que ca
+    df = df.iloc[0]
+    equation = df['Equation']
+    return equation

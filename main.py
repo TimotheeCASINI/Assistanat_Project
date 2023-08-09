@@ -1,5 +1,6 @@
 import streamlit as st
 import descripteur_lib as des
+import sympy as sp
 
 st.title('ODESSA')
 
@@ -15,8 +16,9 @@ st.write(des.présentation(option))
 valeur = st.slider("Quel valeur souhaitez-vous pour votre produit pour le descripteur "+option+" ?",0,10)
 
 #Recupere les modèles voulus
-des.recupModele(option,valeur)
+equation = des.recupModele(option,valeur)
 st.write("Le modèle optimale pour le descripteur "+option+" à la valeur "+str(valeur)+" requiert ces mesures : ...")
+st.write(equation)
 
 
 
