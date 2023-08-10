@@ -25,4 +25,5 @@ def recupModele(descripteur,valeur):
     #Recuperation du modèle un peu plus logique que ca
     df = df.iloc[0]
     equation = df['Equation']
-    return equation
+    para = df['Parametre']
+    return equation,para

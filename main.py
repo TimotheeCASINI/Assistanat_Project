@@ -16,9 +16,17 @@ st.write(des.présentation(option))
 valeur = st.slider("Quel valeur souhaitez-vous pour votre produit pour le descripteur "+option+" ?",0,10)
 
 #Recupere les modèles voulus
-equation = des.recupModele(option,valeur)
-st.write("Le modèle optimale pour le descripteur "+option+" à la valeur "+str(valeur)+" requiert ces mesures : ...")
+equation,parametre = des.recupModele(option,valeur)
+st.write("Le modèle optimale pour le descripteur "+option+" à la valeur "+str(valeur)+" requiert ces mesures : "+parametre)
 st.write(equation)
 
+#Faire le calcul avec la valeur
+"""
+Il faut pouvoir prendre plusieurs inconnues
+"""
+x = sp.symbols('x')
+equation_sympy = sp.sympify(equation)
+solutions = sp.solve(equation_sympy,x)
+st.write("Il vous faut des mesures de "+parametre+" égal à: "+str(solutions)+"")
 
 
