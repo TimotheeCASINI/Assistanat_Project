@@ -21,12 +21,11 @@ st.write("Le modèle optimale pour le descripteur "+option+" à la valeur "+str(
 st.write(equation)
 
 #Faire le calcul avec la valeur
-"""
-Il faut pouvoir prendre plusieurs inconnues
-"""
+#Il faut pouvoir prendre plusieurs inconnues / Vérifier le systeme de résolution
+print(equation)
 x = sp.symbols('x')
 equation_sympy = sp.sympify(equation)
-solutions = sp.solve(equation_sympy,x)
+solutions = sp.solveset(sp.Eq(equation_sympy,valeur),x)
 st.write("Il vous faut des mesures de "+parametre+" égal à: "+str(solutions)+"")
 
 
