@@ -1,6 +1,7 @@
 import streamlit as st
 import descripteur_lib as des
 import sympy as sp
+from math import log
 
 st.title('ODESSA')
 
@@ -25,7 +26,8 @@ st.write(equation)
 print(equation)
 x = sp.symbols('x')
 equation_sympy = sp.sympify(equation)
-solutions = sp.solveset(sp.Eq(equation_sympy,valeur),x)
+solutions = sp.solveset(sp.Eq(equation_sympy,log(valeur)),x)
 st.write("Il vous faut des mesures de "+parametre+" égal à: "+str(solutions)+"")
+#vérifier les résultats attention la sortie est en log10
 
 
