@@ -1,8 +1,9 @@
-import pandas as pd
-descripteur = 'Fluide'
-valeur = 7
-df = pd.read_csv("Modele/modele.csv")
-df = df[(df.Descripteur == descripteur) & (df.Min <= valeur) & (df.Max >= valeur)]
-#Recuperation du modèle un peu plus logique que ca
-fonction = df.at[0,'Equation']
-print(type(fonction[0]))
+import sympy as sp
+from math import log10
+equation ="0.261319+0.801567*x-0.220531*x^2"
+print(equation)
+x = sp.symbols('x')
+equation_sympy = sp.sympify(equation)
+solutions = sp.solveset(sp.Eq(equation_sympy,0.85),x)
+print(solutions)
+print(log10(7))
