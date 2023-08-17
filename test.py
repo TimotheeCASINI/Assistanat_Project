@@ -1,9 +1,13 @@
 import sympy as sp
 from math import log10
-equation ="0.261319+0.801567*x-0.220531*x^2"
+equation_string = "x+y"
+equation_sympy = sp.sympify(equation_string)
+equation =sp.Eq(equation_sympy,0)
+equation2=sp.Eq(equation_sympy,0)
 print(equation)
-x = sp.symbols('x')
-equation_sympy = sp.sympify(equation)
-solutions = sp.solveset(sp.Eq(equation_sympy,0.85),x)
+x,y = sp.symbols('x y')
+#list_unknows = list(unknows)
+#print(list_unknows)
+#equation_sympy = sp.sympify(equation)
+solutions = sp.solve((equation,equation2),(x,y))
 print(solutions)
-print(log10(7))
