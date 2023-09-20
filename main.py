@@ -27,7 +27,6 @@ Réalisation du calcul de la valeur à partir d'une chaine de caractère.
 Les équations prise pour l'instant sont toute en log10, les entrées et les sorties doivent donc l'êtrec aussi
 
 TO DO : - Prendre en compte plusieurs inconnues si besoin
-- 
 """
 x = sp.symbols('x')
 equation_sympy = sp.sympify(equation)

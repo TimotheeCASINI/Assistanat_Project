@@ -17,7 +17,7 @@ def présentation(descripteur):
 def recupModele(descripteur,valeur):
     """
     But : Renvoie le modèle qui va être utilisé pour calculer la valeur voulu
-    paramètre : le nom du descripteur voulu et la valeur de descripteur recherchee
+    paramètre : le nom du descripteur voulu et la valeur de descripteur recherche
     """
     #Réduction du dataframe avec seulement la bonne valeur et le descripteur
     df = pd.read_csv("Modele/modele.csv")
@@ -27,3 +27,14 @@ def recupModele(descripteur,valeur):
     equation = df['Equation']
     para = df['Parametre']
     return equation,para
+
+def recupModeles(descripteur):
+    """
+    But : Renvoie tous les modèles d'un descripteur et les metadonnées
+    paramètre : le nom du descripteur voulu
+    """
+    #Réduction du dataframe avec seulement la bonne valeur et le descripteur
+    df = pd.read_csv("Modele/modele.csv")
+    df = df[(df.Descripteur == descripteur)]
+    df = df.drop('Descripteur',axis=1)
+    return df
