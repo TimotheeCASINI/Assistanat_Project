@@ -3,13 +3,13 @@ Projet d'assistanat - Corrélation senso / instru
 
 Objectif : Réalisation d'un streamlit / prototype ODESSA
 
-#Fonctionnalité 
-###Côté entreprise
+# Fonctionnalité 
+### Côté entreprise
 
 - Page avec tous les résultats
 - Page avec des analyses de résultat personnalisé
 
-###Côté client
+### Côté client
 
 - Prédir la note sensorielle d'un produit inconnu 
 
