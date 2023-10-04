@@ -3,5 +3,15 @@ Projet d'assistanat - Corrélation senso / instru
 
 Objectif : Réalisation d'un streamlit / prototype ODESSA
 
-Prototype ODESSA : Dans MartinTest, seulement 2 descripteurs sont à prendre en compte pour le moment : Filant et Fluide 
+FAIT PAR TIMOTHÉE ET NON PAR MARTIN
 
+=======
+# Fonctionnalité 
+### Côté entreprise
+
+- Page avec tous les résultats
+- Page avec des analyses de résultat personnalisé
+
+### Côté client
+
+- Prédir la note sensorielle d'un produit inconnu 
