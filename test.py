@@ -11,3 +11,5 @@ x,y = sp.symbols('x y')
 #equation_sympy = sp.sympify(equation)
 solutions = sp.solve((equation,equation2),(x,y))
 print(solutions)
+
+# commentaire
