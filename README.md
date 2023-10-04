@@ -3,6 +3,9 @@ Projet d'assistanat - Corrélation senso / instru
 
 Objectif : Réalisation d'un streamlit / prototype ODESSA
 
+FAIT PAR TIMOTHÉE ET NON PAR MARTIN
+
+=======
 # Fonctionnalité 
 ### Côté entreprise
 
@@ -12,4 +15,3 @@ Objectif : Réalisation d'un streamlit / prototype ODESSA
 ### Côté client
 
 - Prédir la note sensorielle d'un produit inconnu 
-
