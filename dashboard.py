@@ -11,22 +11,56 @@ def change_dataframe(df_modele):
         new_df = df_modele.copy(deep=True)
     return new_df
 
+#Recupération bdd (A mettre en cache)
+df_descripteur = descripteur_lib.recupDescripteur()
+df_modele = descripteur_lib.recupModeles()
+df_modele_user = df_modele.copy(deep=True)
+df_gel = pd.read_csv("Data/gel/gel_data_instru.csv",sep=";")
 
 #Creation variable global
 list_settings_checkbox = ["Gel","Emulsion","G'","FminE","CoF30","JSM","Moyenne","jinf%","LOG10"]
-
-#Recupération bdd (A mettre en cache)
-df_descripteur = descripteur_lib.recupDescripteur()
 list_descripteur = df_descripteur['Descripteur'].to_list()
-
-df_modele = descripteur_lib.recupModeles()
-df_modele_user = df_modele.copy(deep=True)
+list_settings_gel = df_gel.columns.to_list()[1:]
+list_produits_gel = df_gel["Produit"].to_list()
 
 
 #Debut Streamlit
 st.title("Projet ODESSA")
-st.header("Analyse des descripteurs")
 
+#Analyse données instrumentales
+st.header("Analyse des données intrumentales")
+
+#Affichage input instru
+ite=0
+st.sidebar.header("Input data instru")
+st.sidebar.subheader("simple bar chart")
+option_parametre = st.sidebar.selectbox(
+    'Quel parametre voulez vous ?',
+    list_settings_gel,
+    index=None,
+    placeholder="Selectionner un parametre...",
+    key="op_settings_gel",
+)
+
+option_produit = st.sidebar.multiselect(
+    'Quel(s) produit(s) voulez vous ?',
+    list_produits_gel,
+    placeholder="Selectionner un ou plusieurs produits...",
+    key="op_produit_gel",
+)
+
+#affichage donnée
+st.dataframe(df_gel)
+if option_produit == []:
+    st.bar_chart(df_gel, x="Produit", y=option_parametre)
+else:
+    st.bar_chart(df_gel[df_gel['Produit'].isin(option_produit)], x="Produit", y=option_parametre)
+
+
+
+
+#Analyse modèle
+st.header("Analyse des modèles")
 
 #Affichage input
 option_descripteur = st.selectbox(

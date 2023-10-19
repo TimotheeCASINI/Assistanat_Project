@@ -8,7 +8,7 @@ def recupDescripteur():
     But : Recupere les descripteur dans la bdd qui se trouve dans le dossier descripteur et le fichier CSV
     Output : DataFrame pandas
     """
-    df = pd.read_csv("Descripteur/descripeur_bdd.csv")
+    df = pd.read_csv("Data/Descripteur/descripeur_bdd.csv")
     return df
 
 def recupModele(descripteur,valeur):
@@ -17,7 +17,7 @@ def recupModele(descripteur,valeur):
     paramètre : le nom du descripteur voulu et la valeur de descripteur recherche
     """
     #Réduction du dataframe avec seulement la bonne valeur et le descripteur
-    df = pd.read_csv("Modele/modele.csv")
+    df = pd.read_csv("Data/Modele/modele.csv")
     df = df[(df.Descripteur == descripteur) & (df.Min <= valeur) & (df.Max >= valeur)]
     #Recuperation du modèle un peu plus logique que ca
     df = df.iloc[0]
@@ -31,5 +31,5 @@ def recupModeles():
     paramètre : le nom du descripteur voulu
     """
     #Réduction du dataframe avec seulement la bonne valeur et le descripteur
-    df = pd.read_csv("Modele/modele.csv")
+    df = pd.read_csv("Data/Modele/modele.csv")
     return df
