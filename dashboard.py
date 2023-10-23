@@ -34,10 +34,17 @@ st.header("Analyse des données intrumentales")
 ite=0
 st.sidebar.header("Input data instru")
 st.sidebar.subheader("simple bar chart")
-option_parametre = st.sidebar.selectbox(
+
+option_parametre = st.sidebar.selectbox(#A implémenter
+    'Quel caractérisation voulez vous ?',
+    list_settings_gel,
+    placeholder="Selectionner une caractérisation...",
+    key="op_caractérisation_gel",
+)
+
+option_parametre = st.sidebar.multiselect(
     'Quel parametre voulez vous ?',
     list_settings_gel,
-    index=None,
     placeholder="Selectionner un parametre...",
     key="op_settings_gel",
 )
@@ -51,6 +58,8 @@ option_produit = st.sidebar.multiselect(
 
 #affichage donnée
 st.dataframe(df_gel)
+if option_parametre==[]:
+    option_parametre = list_settings_gel.copy()
 if option_produit == []:
     st.bar_chart(df_gel, x="Produit", y=option_parametre)
 else:
@@ -106,4 +115,3 @@ chart_data = pd.DataFrame(
 )
 
 st.line_chart(chart_data)
-
