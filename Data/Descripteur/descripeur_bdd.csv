@@ -1,3 +1,13 @@
 Descripteur,Explication
-Fluide,Descripteur permettant de déterminer a quel point un produit est fluide
-Filant,Descripteur permettant de déterminer a quel point un produit est filant<
+Fluide,Pression / Aucune tenue / Ecoulement
+Filant,Ecartement lent / fil continu / Longueur
+Glissant,Frottement / Pas de resistance
+Etalement,Pas de resistance au mouvement
+Collant,Adhésion suite à une pression
+Penetrant,Aucun résidu après glissement
+Gras,Epaisseur du produit entre les doigts
+Doux,Toucher sec et glissant
+Effet coussin,Rebond suite à deux pressions
+Effet cassant,Changement de viscosité à l'étalement
+Pelucheux,formation de peluches liées à un film après sechage
+Test filant, Aucune informtion actuellement

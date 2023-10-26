@@ -15,13 +15,15 @@ def change_dataframe(df_modele):
 df_descripteur = descripteur_lib.recupDescripteur()
 df_modele = descripteur_lib.recupModeles()
 df_modele_user = df_modele.copy(deep=True)
-df_gel = pd.read_csv("Data/gel/gel_data_instru.csv",sep=";")
+df_gel = pd.read_csv("Data/gel/donnees_brutes_Gels.csv",sep=";")
 
 #Creation variable global
 list_settings_checkbox = ["Gel","Emulsion","G'","FminE","CoF30","JSM","Moyenne","jinf%","LOG10"]
+list_settings_senso = ["Fluide","Filant","Glissant","Etalement","Doux","Collant","Gras","Penetrant","Effet coussin","Effet cassant","Pelucheux","Test filant"]
 list_descripteur = df_descripteur['Descripteur'].to_list()
-list_settings_gel = df_gel.columns.to_list()[1:]
+list_settings_gel = [x for x in df_gel.columns.to_list()[1:] if x not in list_settings_senso]
 list_produits_gel = df_gel["Produit"].to_list()
+
 
 
 #Debut Streamlit
@@ -64,6 +66,32 @@ if option_produit == []:
     st.bar_chart(df_gel, x="Produit", y=option_parametre)
 else:
     st.bar_chart(df_gel[df_gel['Produit'].isin(option_produit)], x="Produit", y=option_parametre)
+
+
+#Analyse données sensorielle
+st.header("Analyse des données sensorielle")
+
+##Affichage input senso
+st.sidebar.header("Input data senso")
+option_senso = st.sidebar.multiselect(
+    'Quel(s) parametre sensoriel voulez vous ?',
+    list_settings_senso,
+    placeholder="Selectionner un ou plusieurs parametre sensoriel...",
+    key="op_senso_gel",
+)
+
+#affichage donnée
+st.dataframe(df_gel)
+if option_senso==[]:
+    option_senso = list_settings_senso.copy()
+if option_produit == []:
+    st.bar_chart(df_gel, x="Produit", y=option_senso)
+else:
+    st.bar_chart(df_gel[df_gel['Produit'].isin(option_produit)], x="Produit", y=option_senso)
+
+df_descripteur_user = df_descripteur[df_descripteur['Descripteur'].isin(option_senso)]
+for i in df_descripteur_user.index:
+    st.markdown("**"+df_descripteur_user["Descripteur"][i] + "**: "+df_descripteur_user["Explication"][i])
 
 
 
