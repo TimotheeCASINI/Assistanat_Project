@@ -24,6 +24,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\Data\Gel - emulsion\donnees_brutes_Gels_emulsion.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\Data\Modele\modele.csv">
           <value>
             <Attribute>
@@ -31,7 +38,14 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\Data\gel\Données_brutes_Gels.csv">
+        <entry key="\Data\emulsion\donnees_brutes_emulsion.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=";" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\Data\gel\donnees_brutes_Gels.csv">
           <value>
             <Attribute>
               <option name="separator" value=";" />
