@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import descripteur_lib
+from streamlit_option_menu import option_menu
 
 def change_dataframe(df_modele):
     new_df = None
@@ -21,7 +22,11 @@ df_emulsion = pd.read_csv("Data/emulsion/donnees_brutes_emulsion.csv",sep=";")
 #Creation variable global
 list_settings_checkbox = ["Gel","Emulsion","G'","FminE","CoF30","JSM","Moyenne","jinf%","LOG10"] #remplacer plus tard
 list_descripteur = df_descripteur['Descripteur'].to_list()
-list_caracterisation = ["Rheologie","Texture"]
+
+list_caracterisation = ["Rheologie","Texture","all"]
+dict_caracterisation = {"Rheologie":["Flow","Sweep"],"Texture":["Extrusion","Penetration"],"Sensorielle":["Dans le contenant","Prise en main","Application","Rendu immédiat","Rendu 1m"]}
+dict_experience = {"Dans le contenant":["Fluid","Softness"],"prise en main":["High peak","Slippery"],"Application":["Spreading","No visual residue"],"Rendu immédiat":["Greasy","sticky"],"Rendu 1 min":["No visual residue 1min","Smooth","Greasy 1min","Sticky 1min"],"Flow":["n","η1000","n1000","σ0.01","σ1","σ1000","sigma 0,01","sigma1","sigma1000","Yield stress","k""n"],"Sweep":["G1","G2","tanD","Gamma DL","Sigma DL","Sigma crossover","Gamma crossover","10s","60s"],"Extrusion":["Firmness","Cohesiveness","Consistency","Viscosity index"],"Penetration":["Fmax","Fmin","Aplus","Aminus"]}
+
 
 list_settings_senso_gel = ["Fluide","Filant","Glissant","Etalement","Doux","Collant","Gras","Penetrant","Effet coussin","Effet cassant","Pelucheux","Test filant"]
 list_settings_gel = [x for x in df_gel.columns.to_list()[1:] if x not in list_settings_senso_gel]
@@ -39,145 +44,158 @@ df_user = None
 
 #Debut Streamlit
 st.title("Projet ODESSA")
-
-#Affichage input general
-st.sidebar.header("Input data general")
-
-type = st.sidebar.radio(
-    "Voulez-vous emulsion ou gel ?",
-    ["Emulsion", "Gel"]
+selected = option_menu(
+    menu_title=None,
+    options = ["Home","New Data","Visualization Data"],
+    icons = ["house","plus circle","bar-chart"],
+    menu_icon = "cast",
+    default_index=0,
+    orientation="horizontal"
 )
+if selected == "Home":
+    st.write("Mettre explication et instruction")
 
-if type=="Emulsion":
-    list_settings_senso_user = list_settings_senso_emulsion.copy()
-    list_settings_user = list_settings_emulsion.copy()
-    list_produits_user = list_produits_emulsion.copy()
-    df_user = df_emulsion.copy(deep=True)
-elif type=="Gel":
-    list_settings_senso_user = list_settings_senso_gel.copy()
-    list_settings_user = list_settings_gel.copy()
-    list_produits_user = list_produits_gel.copy()
-    df_user = df_gel.copy(deep=True)
+if selected == "New Data":
+    st.button("Ajouter des données")
 
-print(list_settings_user)
+if selected == "Visualization Data":
 
-######################### INSTRUMENTAL ###########################"
+    #Affichage input general
+    st.sidebar.header("Input data general")
 
-#Affichage input instru
-ite=0
-st.sidebar.header("Input data instru")
-st.sidebar.subheader("simple bar chart")
+    type = st.sidebar.radio(
+        "Voulez-vous emulsion ou gel ?",
+        ["Emulsion", "Gel"]
+    )
 
-option_parametre = st.sidebar.selectbox(#A implémenter
-    'Quel caractérisation voulez vous ?',
-    list_caracterisation,
-    placeholder="Selectionner une caractérisation...",
-    key="op_caractérisation_user",
-    index=None
-)
+    if type=="Emulsion":
+        list_settings_senso_user = list_settings_senso_emulsion.copy()
+        list_settings_user = list_settings_emulsion.copy()
+        list_produits_user = list_produits_emulsion.copy()
+        df_user = df_emulsion.copy(deep=True)
+    elif type=="Gel":
+        list_settings_senso_user = list_settings_senso_gel.copy()
+        list_settings_user = list_settings_gel.copy()
+        list_produits_user = list_produits_gel.copy()
+        df_user = df_gel.copy(deep=True)
 
-option_parametre = st.sidebar.multiselect(
-    'Quel parametre voulez vous ?',
-    list_settings_user,
-    placeholder="Selectionner un parametre...",
-    key="op_settings_user",
-)
+    ######################### INSTRUMENTAL ###########################"
 
-option_produit = st.sidebar.multiselect(
-    'Quel(s) produit(s) voulez vous ?',
-    list_produits_user,
-    placeholder="Selectionner un ou plusieurs produits...",
-    key="op_produit_user",
-)
+    #Affichage input instru
+    ite=0
+    st.sidebar.header("Input data instru")
+    st.sidebar.subheader("simple bar chart")
 
-#Analyse données instrumentales
-st.header("Analyse des données intrumentales")
+    option_parametre = st.sidebar.selectbox(#A implémenter
+        'Quel caractérisation voulez vous ?',
+        list_caracterisation,
+        placeholder="Selectionner une caractérisation...",
+        key="op_caractérisation_user",
+        index=None
+    )
 
-if option_parametre==[]:
-    option_parametre = list_settings_user.copy()
-if option_produit == []:
-    st.dataframe(df_user[['Produit']+option_parametre])
-    st.bar_chart(df_user, x="Produit", y=option_parametre)
-else:
-    st.dataframe(df_user[['Produit']+option_parametre][df_user['Produit'].isin(option_produit)])
-    st.bar_chart(df_user[df_user['Produit'].isin(option_produit)], x="Produit", y=option_parametre)
+    option_parametre = st.sidebar.multiselect(
+        'Quel parametre voulez vous ?',
+        list_settings_user,
+        placeholder="Selectionner un parametre...",
+        key="op_settings_user",
+    )
 
+    option_produit = st.sidebar.multiselect(
+        'Quel(s) produit(s) voulez vous ?',
+        list_produits_user,
+        placeholder="Selectionner un ou plusieurs produits...",
+        key="op_produit_user",
+    )
 
-####################### SENSO #############################""
+    #Analyse données instrumentales
+    st.header("Analyse des données intrumentales")
 
-
-##Affichage input senso
-st.sidebar.header("Input data senso")
-option_senso = st.sidebar.multiselect(
-    'Quel(s) parametre sensoriel voulez vous ?',
-    list_settings_senso_user,
-    placeholder="Selectionner un ou plusieurs parametre sensoriel...",
-    key="op_senso_user",
-)
-
-
-#Analyse données sensorielle
-st.header("Analyse des données sensorielle")
-
-if option_senso==[]:
-    option_senso = list_settings_senso_user.copy()
-if option_produit == []:
-    st.dataframe(df_user[['Produit']+option_senso])
-    st.bar_chart(df_user, x="Produit", y=option_senso)
-else:
-    st.dataframe(df_user[['Produit']+option_senso][df_user['Produit'].isin(option_produit)])
-    st.bar_chart(df_user[df_user['Produit'].isin(option_produit)], x="Produit", y=option_senso)
-
-df_descripteur_user = df_descripteur[df_descripteur['Descripteur'].isin(option_senso)]
-for i in df_descripteur_user.index:
-    st.markdown("**"+df_descripteur_user["Descripteur"][i] + "**: "+df_descripteur_user["Explication"][i])
+    if option_parametre==[]:
+        option_parametre = list_settings_user.copy()
+    if option_produit == []:
+        st.dataframe(df_user[['Produit']+option_parametre])
+        st.bar_chart(df_user, x="Produit", y=option_parametre)
+    else:
+        st.dataframe(df_user[['Produit']+option_parametre][df_user['Produit'].isin(option_produit)])
+        st.bar_chart(df_user[df_user['Produit'].isin(option_produit)], x="Produit", y=option_parametre)
 
 
+    ####################### SENSO #############################""
 
 
-#Analyse modèle
-st.header("Analyse des modèles")
+    ##Affichage input senso
+    st.sidebar.header("Input data senso")
+    option_senso = st.sidebar.multiselect(
+        'Quel(s) parametre sensoriel voulez vous ?',
+        list_settings_senso_user,
+        placeholder="Selectionner un ou plusieurs parametre sensoriel...",
+        key="op_senso_user",
+    )
 
-#Affichage input
-option_descripteur = st.selectbox(
-    'Quel descripteur souhaitez vous ?',
-    list_descripteur,
-    index=None,
-    placeholder="Selectionner un descripteur...",
-    key="op_descripteur",
-)
-if option_descripteur == None:
-    list_choose_user = list_descripteur[:]
-else:
-    list_choose_user = [option_descripteur]
 
-a = st.columns(3)
-ite=0
-for i in list_settings_checkbox:
-    with a[ite%3]:
-        st.checkbox(i,key=i)
-    ite = ite + 1
+    #Analyse données sensorielle
+    st.header("Analyse des données sensorielle")
 
-#Affichage modèle
-df_modele_user = change_dataframe(df_modele)
-st.text("Nombre de modèle correspondant "+str(df_modele_user.shape[0])+" :")
-st.dataframe(df_modele_user,hide_index=True)
+    if option_senso==[]:
+        option_senso = list_settings_senso_user.copy()
+    if option_produit == []:
+        st.dataframe(df_user[['Produit']+option_senso])
+        st.bar_chart(df_user, x="Produit", y=option_senso)
+    else:
+        st.dataframe(df_user[['Produit']+option_senso][df_user['Produit'].isin(option_produit)])
+        st.bar_chart(df_user[df_user['Produit'].isin(option_produit)], x="Produit", y=option_senso)
 
-#Selection ligne
-"""
-selected_indices = st.multiselect('Select rows:', data.index)
-selected_rows = data.loc[selected_indices]
-st.write('### Selected Rows', selected_rows)
-"""
+    df_descripteur_user = df_descripteur[df_descripteur['Descripteur'].isin(option_senso)]
+    for i in df_descripteur_user.index:
+        st.markdown("**"+df_descripteur_user["Descripteur"][i] + "**: "+df_descripteur_user["Explication"][i])
 
-#Affichage efficacité modèle sur borne (Non fonctionnel)
-column_chart = []
-for i in range (df_modele_user.shape[0]):
-    column_chart.append("Equation "+str(i+1))
 
-chart_data = pd.DataFrame(
-    np.random.randn(10,df_modele_user.shape[0]),
-    columns=column_chart,
-)
 
-st.line_chart(chart_data)
+
+    #Analyse modèle
+    st.header("Analyse des modèles")
+
+    #Affichage input
+    option_descripteur = st.selectbox(
+        'Quel descripteur souhaitez vous ?',
+        list_descripteur,
+        index=None,
+        placeholder="Selectionner un descripteur...",
+        key="op_descripteur",
+    )
+    if option_descripteur == None:
+        list_choose_user = list_descripteur[:]
+    else:
+        list_choose_user = [option_descripteur]
+
+    a = st.columns(3)
+    ite=0
+    for i in list_settings_checkbox:
+        with a[ite%3]:
+            st.checkbox(i,key=i)
+        ite = ite + 1
+
+    #Affichage modèle
+    df_modele_user = change_dataframe(df_modele)
+    st.text("Nombre de modèle correspondant "+str(df_modele_user.shape[0])+" :")
+    st.dataframe(df_modele_user,hide_index=True)
+
+    #Selection ligne
+    """
+    selected_indices = st.multiselect('Select rows:', data.index)
+    selected_rows = data.loc[selected_indices]
+    st.write('### Selected Rows', selected_rows)
+    """
+
+    #Affichage efficacité modèle sur borne (Non fonctionnel)
+    column_chart = []
+    for i in range (df_modele_user.shape[0]):
+        column_chart.append("Equation "+str(i+1))
+
+    chart_data = pd.DataFrame(
+        np.random.randn(10,df_modele_user.shape[0]),
+        columns=column_chart,
+    )
+
+    st.line_chart(chart_data)
