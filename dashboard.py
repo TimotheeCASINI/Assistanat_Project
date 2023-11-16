@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import descripteur_lib
 from streamlit_option_menu import option_menu
+from st_aggrid import AgGrid
 
 def change_dataframe(df_modele):
     new_df = None
@@ -25,8 +26,7 @@ list_descripteur = df_descripteur['Descripteur'].to_list()
 
 list_caracterisation = ["Rheologie","Texture","all"]
 dict_caracterisation = {"Rheologie":["Flow","Sweep"],"Texture":["Extrusion","Penetration"],"Sensorielle":["Dans le contenant","Prise en main","Application","Rendu immédiat","Rendu 1m"]}
-dict_experience = {"Dans le contenant":["Fluid","Softness"],"prise en main":["High peak","Slippery"],"Application":["Spreading","No visual residue"],"Rendu immédiat":["Greasy","sticky"],"Rendu 1 min":["No visual residue 1min","Smooth","Greasy 1min","Sticky 1min"],"Flow":["n","η1000","n1000","σ0.01","σ1","σ1000","sigma 0,01","sigma1","sigma1000","Yield stress","k""n"],"Sweep":["G1","G2","tanD","Gamma DL","Sigma DL","Sigma crossover","Gamma crossover","10s","60s"],"Extrusion":["Firmness","Cohesiveness","Consistency","Viscosity index"],"Penetration":["Fmax","Fmin","Aplus","Aminus"]}
-
+dict_experience = {"Dans le contenant":["Fluid","Softness"],"prise en main":["High peak","Slippery"],"Application":["Spreading","No visual residue"],"Rendu immédiat":["Greasy","sticky"],"Rendu 1 min":["No visual residue 1min","Smooth","Greasy 1min","Sticky 1min"],"Flow":["n","η1000","n1000","σ0.01","σ1","σ1000","sigma 0.01","sigma1","sigma1000","Yield stress","k","n(2)"],"Sweep":["G1","G2","tanD","Gamma DL","Sigma DL","Sigma crossover","Gamma crossover","10s","60s"],"Extrusion":["Firmness","Cohesiveness","Consistency","Viscosity index"],"Penetration":["Fmax","Fmin","Aplus","Aminus"]}
 
 list_settings_senso_gel = ["Fluide","Filant","Glissant","Etalement","Doux","Collant","Gras","Penetrant","Effet coussin","Effet cassant","Pelucheux","Test filant"]
 list_settings_gel = [x for x in df_gel.columns.to_list()[1:] if x not in list_settings_senso_gel]
@@ -52,12 +52,31 @@ selected = option_menu(
     default_index=0,
     orientation="horizontal"
 )
+
+######################################### Home ###################################
+
 if selected == "Home":
     st.write("Mettre explication et instruction")
 
-if selected == "New Data":
-    st.button("Ajouter des données")
+######################################## New Data #####################################################
 
+if selected == "New Data":
+    uploaded_file = st.file_uploader("Choose a file")
+    if uploaded_file is not None:
+        dftest = pd.read_excel(uploaded_file)
+        AgGrid(dftest)
+        list_caracterisation = dftest.iloc[0].dropna()
+        print(list_caracterisation)
+
+    col = st.columns(3)
+
+    with open("Doc/Modele.xlsx", 'rb') as my_file:
+        with col[1]:
+            st.download_button(label='Telecharger le modèle', data=my_file, file_name='Modele.xlsx',
+                           mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+###################################### Visualization Data ##########################################
 if selected == "Visualization Data":
 
     #Affichage input general
@@ -86,12 +105,11 @@ if selected == "Visualization Data":
     st.sidebar.header("Input data instru")
     st.sidebar.subheader("simple bar chart")
 
-    option_parametre = st.sidebar.selectbox(#A implémenter
+    option_caracterisation = st.sidebar.selectbox(#A implémenter
         'Quel caractérisation voulez vous ?',
         list_caracterisation,
         placeholder="Selectionner une caractérisation...",
-        key="op_caractérisation_user",
-        index=None
+        key="op_caractérisation_user"
     )
 
     option_parametre = st.sidebar.multiselect(
@@ -111,9 +129,17 @@ if selected == "Visualization Data":
     #Analyse données instrumentales
     st.header("Analyse des données intrumentales")
 
-    if option_parametre==[]:
-        option_parametre = list_settings_user.copy()
+    if option_parametre==[] and option_caracterisation!="all":
+        tempo_list = dict_caracterisation.get(option_caracterisation)
+        tempo_list2 = [dict_experience.get(key) for key in tempo_list]
+        option_parametre = [n for one_dim in tempo_list2 for n in one_dim]
+        print("pass caract if")
+
+    elif option_parametre == []:
+            option_parametre = list_settings_user.copy()
+
     if option_produit == []:
+        print(option_parametre)
         st.dataframe(df_user[['Produit']+option_parametre])
         st.bar_chart(df_user, x="Produit", y=option_parametre)
     else:
@@ -122,7 +148,6 @@ if selected == "Visualization Data":
 
 
     ####################### SENSO #############################""
-
 
     ##Affichage input senso
     st.sidebar.header("Input data senso")
