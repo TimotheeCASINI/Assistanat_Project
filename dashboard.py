@@ -56,20 +56,35 @@ selected = option_menu(
 ######################################### Home ###################################
 
 if selected == "Home":
-    st.write("Mettre explication et instruction")
+    st.title("Bienvenue dans notre application")
+    st.write("Explorez et visualisez différentes caractéristiques des produits cosmétiques.")
+
+    # Ajouter une section avec des icônes et des informations supplémentaires
+    st.subheader("Qu'est-ce que notre application offre ?")
+    st.write("📊 Visualisation interactive des données cosmétiques.")
+    st.write("📈 Analyse des tendances et des variations.")
+    st.write("🔍 Ajout facile de nouvelles données pour une mise à jour dynamique.")
+
+    # Ajouter une section pour expliquer comment utiliser l'application
+    st.subheader("Comment utiliser l'application ?")
+    st.write("1. Utilisez la section de gauche pour ajouter de nouvelles données.")
+    st.write("2. Explorez la section de visualisation pour analyser les données existantes.")
+
+    # Ajouter un appel à l'action pour encourager l'exploration
+    st.success("Commencez dès maintenant ! 🚀")
 
 ######################################## New Data #####################################################
 
 if selected == "New Data":
     uploaded_file = st.file_uploader("Choose a file")
     if uploaded_file is not None:
-        dftest = pd.read_excel(uploaded_file)
-        AgGrid(dftest)
-        list_caracterisation = dftest.iloc[0].dropna()
-        print(list_caracterisation)
+        df_new_data = pd.read_excel(uploaded_file)
+        AgGrid(df_new_data)
+        print(df_new_data)
+        list_caracterisation = df_new_data.iloc[[0]].dropna(axis=1).values.flatten()
+
 
     col = st.columns(3)
-
     with open("Doc/Modele.xlsx", 'rb') as my_file:
         with col[1]:
             st.download_button(label='Telecharger le modèle', data=my_file, file_name='Modele.xlsx',
@@ -98,7 +113,7 @@ if selected == "Visualization Data":
         list_produits_user = list_produits_gel.copy()
         df_user = df_gel.copy(deep=True)
 
-    ######################### INSTRUMENTAL ###########################"
+    ######################### INSTRUMENTAL ###########################
 
     #Affichage input instru
     ite=0
@@ -133,7 +148,6 @@ if selected == "Visualization Data":
         tempo_list = dict_caracterisation.get(option_caracterisation)
         tempo_list2 = [dict_experience.get(key) for key in tempo_list]
         option_parametre = [n for one_dim in tempo_list2 for n in one_dim]
-        print("pass caract if")
 
     elif option_parametre == []:
             option_parametre = list_settings_user.copy()
@@ -145,6 +159,11 @@ if selected == "Visualization Data":
     else:
         st.dataframe(df_user[['Produit']+option_parametre][df_user['Produit'].isin(option_produit)])
         st.bar_chart(df_user[df_user['Produit'].isin(option_produit)], x="Produit", y=option_parametre)
+
+    with st.expander("Voir explication"):
+        st.write("Cette fonctionnalité est en cours de developpement")
+        st.image("https://static.streamlit.io/examples/dice.jpg")
+
 
 
     ####################### SENSO #############################""
