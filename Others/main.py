@@ -1,5 +1,5 @@
 import streamlit as st
-from library import descripteur_lib as des
+import descripteur_lib as des
 import sympy as sp
 from math import log10
 
