@@ -4,7 +4,17 @@ import numpy as np
 import descripteur_lib
 from streamlit_option_menu import option_menu
 from st_aggrid import AgGrid
-from streamlit_extras.app_logo import add_logo
+#from streamlit_extras.app_logo import add_logo
+
+def get_dict_BDD_generale():
+    dict_df = pd.read_excel("Data/BDD generale/BDD.xlsx",sheet_name=None)
+    return dict_df
+
+def load_generale_data():
+    dict_BDD = get_dict_BDD_generale()
+    df = pd.concat(dict_BDD,axis=1, join="inner")
+    load_data(df,"Données sensorielles & instrumentales",True)
+    print("Not implemented")
 
 def change_dataframe(df_modele):
     if st.session_state.op_descripteur != None:
@@ -21,19 +31,18 @@ def load_explanation():
     st.write("Cette fonctionnalité est en cours de developpement")
     st.image("https://static.streamlit.io/examples/dice.jpg")
 
-def load_generale_data():
-    print("Not implemented")
-
 def supp_session_state_data():
     for key in st.session_state.keys():
         del st.session_state[key]
     st.session_state.data_load = False
-    print("not implemented")
 
-def load_data(uploaded_file,type_data):
+def load_data(uploaded_file,type_data,generale_BDD):
     supp_session_state_data()
-    df_new_data = pd.read_excel(uploaded_file)
-    AgGrid(df_new_data)
+    if generale_BDD:
+        df_new_data = uploaded_file
+    else:
+        df_new_data = pd.read_excel(uploaded_file)
+    #AgGrid(df_new_data)
     st.session_state.list_caracterisation = df_new_data.iloc[[0]].dropna(
         axis=1).values.flatten()  # list_caracterisation => liste des catégories tel que Analyse sensorielle
     st.session_state.dict_caracterisation = {}  # Creation dict Caracterisation )> dictionnaire qui permet de lier les catégories (clé) avec les cous catégories (values)
@@ -89,11 +98,15 @@ def load_data(uploaded_file,type_data):
     df_new_data.iloc[0, 0] = "Produit"
     df_new_data.columns = df_new_data.iloc[0].to_list()
     df_new_data = df_new_data[1:]
-    df_new_data.iloc[:,1:] = df_new_data.iloc[:,1:].apply(pd.to_numeric)
+    print(df_new_data.iloc[:,1:])
+    #df_new_data.iloc[:,1:] = df_new_data.iloc[:,1:].apply(pd.to_numeric)
     st.session_state.df = df_new_data
     st.session_state.data_load = True  # Variable permettant de s'assurer de la bonne intégration des données
     st.session_state.type_data = type_data
-    st.session_state.name_file = uploaded_file.name
+    if generale_BDD:
+        st.session_state.name_file = "Generale BDD"
+    else:
+        st.session_state.name_file = uploaded_file.name
 
 def add_data():
     print(st.session_state.title_add_data)
@@ -174,7 +187,7 @@ if selected == "New Data":
     if type_data != None:
         uploaded_file = st.file_uploader("Choose a file")
         if uploaded_file is not None:
-            load_data(uploaded_file,type_data)
+            load_data(uploaded_file,type_data,False)
 
     col = st.columns(3)
     with open("Doc/Modele.xlsx", 'rb') as my_file:
