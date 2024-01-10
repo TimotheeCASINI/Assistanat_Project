@@ -42,7 +42,7 @@ def load_data(uploaded_file,type_data,generale_BDD):
         df_new_data = uploaded_file
     else:
         df_new_data = pd.read_excel(uploaded_file)
-    #AgGrid(df_new_data)
+        AgGrid(df_new_data)
     st.session_state.list_caracterisation = df_new_data.iloc[[0]].dropna(
         axis=1).values.flatten()  # list_caracterisation => liste des catégories tel que Analyse sensorielle
     st.session_state.dict_caracterisation = {}  # Creation dict Caracterisation )> dictionnaire qui permet de lier les catégories (clé) avec les cous catégories (values)
@@ -98,8 +98,7 @@ def load_data(uploaded_file,type_data,generale_BDD):
     df_new_data.iloc[0, 0] = "Produit"
     df_new_data.columns = df_new_data.iloc[0].to_list()
     df_new_data = df_new_data[1:]
-    print(df_new_data.iloc[:,1:])
-    #df_new_data.iloc[:,1:] = df_new_data.iloc[:,1:].apply(pd.to_numeric)
+    df_new_data.iloc[:,1:] = df_new_data.iloc[:,1:].apply(pd.to_numeric,errors='coerce')
     st.session_state.df = df_new_data
     st.session_state.data_load = True  # Variable permettant de s'assurer de la bonne intégration des données
     st.session_state.type_data = type_data
@@ -355,6 +354,8 @@ if selected == "Visualization":
         if st.sidebar.button("Sauvegarde des données dans la bdd"):
             title = st.sidebar.text_input('Nom des données à sauvegarder',on_change=add_data,key="title_add_data")
             #st.sidebar.button("Ajouter",on_click=add_data,args=(title,))
+        st.sidebar.header("Enlever données")
+        st.sidebar.button("Enlever les données",on_click=supp_session_state_data())
 
     if selected == "Prediction":
         st.write("not here")
