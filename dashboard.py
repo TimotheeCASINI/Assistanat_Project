@@ -36,6 +36,20 @@ def supp_session_state_data():
         del st.session_state[key]
     st.session_state.data_load = False
 
+def check_double(list_to_check):
+    newlist = []
+    duplist = []
+    for i in list_to_check:
+        if i not in newlist:
+            newlist.append(i)
+        else:
+            duplist.append(i)  #capture les premiers doublons et les ajoute à la liste
+    if len(duplist)>0:
+        return True,duplist
+    else:
+        return False,[]
+
+
 def load_data(uploaded_file,type_data,generale_BDD):
     supp_session_state_data()
     if generale_BDD:
@@ -106,6 +120,17 @@ def load_data(uploaded_file,type_data,generale_BDD):
         st.session_state.name_file = "Generale BDD"
     else:
         st.session_state.name_file = uploaded_file.name
+
+    #Verification de duplicas dans les colonnes
+    list_verif_double = [st.session_state.list_caracterisation,st.session_state.list_all_settings,[x for y in list(st.session_state.dict_caracterisation.values()) for x in y]]
+    print(list(st.session_state.dict_caracterisation.values()))
+    for list_data in list_verif_double:
+        is_double, duplicates = check_double(list_data)
+        if is_double:
+            supp_session_state_data()
+            st.write("Il y a des duplicas dans les colonne "+str(duplicates))
+            st.write("Veuiller choisir un nouveau fichier ou modifier le fichier")
+
 
 def add_data():
     print(st.session_state.title_add_data)
@@ -186,7 +211,10 @@ if selected == "New Data":
     if type_data != None:
         uploaded_file = st.file_uploader("Choose a file")
         if uploaded_file is not None:
-            load_data(uploaded_file,type_data,False)
+            if uploaded_file.name.startswith("BDD."):
+                st.write("Pour des raisons de sécurité votre fichier n'est pas permis de s'appeler comme ca")
+            else:
+                load_data(uploaded_file,type_data,False)
 
     col = st.columns(3)
     with open("Doc/Modele.xlsx", 'rb') as my_file:
