@@ -1,0 +1,4 @@
+Descripteur,Equation,Min,Max,Parametre,inconnu,Details
+Fluid,0.261319+0.801567*x-0.220531*x^2,0,10,G'(Pa),x,NaN
+Softness,8.62477-9.77927*x-6.21302*y+3.79899*x^2+3.4161*y^2,0,5,CoF30/Moyenne pts,x y,Cof à 30s
+Softness,10.1406-4.53493*x+1.57172*y-9.48869*z-8.59018*w-8.05212*x^2+0.670575*y^2+3.20194*z^2+4.7479*w^2,5,10,Jinf%/JSM%/CoF30sec/Moyenne,x y z w,Cof à 30s

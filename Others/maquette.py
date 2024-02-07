@@ -1,9 +1,9 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import descripteur_lib
+from library import descripteur_lib
 import random
-from io import StringIO
+
 
 # Fonction pour calculer les inconnues en fonction de la valeur choisie par le client
 def calculer_inconnues(nb_inconnue):
@@ -63,7 +63,7 @@ valeur_client = st.slider("Choisir une valeur (entre 1 et 10)", 1, 10, 5)
 nb_inconnue = 2
 inconnues = calculer_inconnues(nb_inconnue)
 
-equation, parametre = descripteur_lib.recupModele(option_clients,valeur_client)
+equation, parametre = descripteur_lib.recupModele(option_clients, valeur_client)
 st.write("Le modèle optimale pour le descripteur "+option_clients+" à la valeur "+str(valeur_client)+" requiert ces mesures : "+parametre)
 st.write(equation)
 

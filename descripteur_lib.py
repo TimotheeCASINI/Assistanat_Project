@@ -1,18 +1,15 @@
-#Librarie permettant de gérer les différentes interaction entre l'application streamlit et les informations sur les descripteurs
+#Librarie permettant de gérer les différentes interaction entre l'application streamlit et
+#les informations dans les différentes bdd
 
 import pandas as pd
 
-def présentation(descripteur):
+def recupDescripteur():
     """
-    But : Renvoie STRING avec description du descripteur choisi
-    paramètre : le nom du descripteur voulu
+    But : Recupere les descripteur dans la bdd qui se trouve dans le dossier descripteur et le fichier CSV
+    Output : DataFrame pandas
     """
-    if descripteur == "Fluide":
-        return "Descripteur permettant de déterminer a quel point un produit est fluide"
-    elif descripteur == "Filant":
-        return "Descripteur permettant de déterminer a quel point un produit est filant"
-    else:
-        return "Rien a affiche pour ce descripteur"
+    df = pd.read_csv("Data/Descripteur/descripeur_bdd.csv")
+    return df
 
 def recupModele(descripteur,valeur):
     """
@@ -20,7 +17,7 @@ def recupModele(descripteur,valeur):
     paramètre : le nom du descripteur voulu et la valeur de descripteur recherche
     """
     #Réduction du dataframe avec seulement la bonne valeur et le descripteur
-    df = pd.read_csv("Modele/modele.csv")
+    df = pd.read_csv("Data/Modele/modele.csv")
     df = df[(df.Descripteur == descripteur) & (df.Min <= valeur) & (df.Max >= valeur)]
     #Recuperation du modèle un peu plus logique que ca
     df = df.iloc[0]
@@ -28,13 +25,11 @@ def recupModele(descripteur,valeur):
     para = df['Parametre']
     return equation,para
 
-def recupModeles(descripteur):
+def recupModeles():
     """
     But : Renvoie tous les modèles d'un descripteur et les metadonnées
     paramètre : le nom du descripteur voulu
     """
     #Réduction du dataframe avec seulement la bonne valeur et le descripteur
-    df = pd.read_csv("Modele/modele.csv")
-    df = df[(df.Descripteur == descripteur)]
-    df = df.drop('Descripteur',axis=1)
+    df = pd.read_csv("Data/Modele/modele.csv")
     return df
